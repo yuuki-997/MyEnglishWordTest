@@ -47,7 +47,16 @@ $("#save").on("click",function(){
     const key = $("#key").val();
     const value = $("#memo").val();
     localStorage.setItem(key,value);
-    const html = '<tr><td class="key">'+key+'</td><td class="memo">'+value+'</td><td><button class="edit">Edit</button></td><td><button class="delete">Delete</button></td></tr>';
+    const html = `
+        <tr>
+            <td class="key">${key}</td>
+            <td class="memo">${value}</td>
+            <td>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+                <button class="open">Open</button>
+            </td>
+        </tr>`;
     $("#list").append(html);
     $("#key").val("");
     $("#memo").val("");
@@ -69,7 +78,16 @@ $("#clear").on("click",function(){
 for(let i=0; i<localStorage.length; i++){  
     const key = localStorage.key(i);
     const value = localStorage.getItem(key);
-    const html = '<tr><td>'+key+'</td><td>'+value+'</td><td><button class="edit">Edit</button></td><td><button class="delete">Delete</button></td></tr>';
+    const html =  `
+        <tr>
+            <td class="key">${key}</td>
+            <td class="memo">${value}</td>
+            <td>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+                <button class="open">Open</button>
+            </td>
+        </tr>`;
     $("#list").append(html);
 }
 
@@ -92,18 +110,19 @@ $(document).on("click", ".edit", function(){
 
 // 6. Hide Key クリックイベント
 $("#hideKey").on("click", function(){
-    $(".key").hide(); // key一覧を隠す
+    $(".key").css("visibility", "hidden"); // key一覧を隠すが、列のスペースは維持
 });
 
 // 7. Hide Memo クリックイベント
 $("#hideMemo").on("click", function(){
-    $(".memo").hide(); // memo一覧を隠す
+    $(".memo").css("visibility", "hidden"); // memo一覧を隠すが、列のスペースは維持
 });
 
-// 8. Open クリックイベント
-$("#open").on("click", function(){
-    $(".key").show();  // key一覧を表示する
-    $(".memo").show(); // memo一覧を表示する
+// 8. 行ごとのOpenボタンのクリックイベント
+$(document).on("click", ".open", function(){
+    const row = $(this).closest("tr");
+    row.find(".key").css("visibility", "visible");  // keyの内容を再表示
+    row.find(".memo").css("visibility", "visible"); // memoの内容を再表示
 });
 
 
