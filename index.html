@@ -125,6 +125,12 @@ $(document).on("click", ".open", function(){
     row.find(".memo").css("visibility", "visible"); // memoの内容を再表示
 });
 
+// 9. すべての項目を表示するOpenボタンのクリックイベント
+$("#open").on("click", function(){
+    $(".key").css("visibility", "visible");  
+    $(".memo").css("visibility", "visible"); 
+});
+
 
 </script>
 <footer><small>G's</small></footer>
