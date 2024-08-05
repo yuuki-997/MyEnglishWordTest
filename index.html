@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My English Word Test</title>
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+</head>
+<body>
+<header>
+<h1>My English Word Test</h1>
+</header>
+<main>
+    <p>English Word</p>
+    <input type="text" id="key">
+    <p>日本語</p>
+    <textarea id="memo"></textarea>
+    <ul>
+        <li id="save">Save</li>
+        <li id="clear">Clear</li>
+        <li id="hideKey">Hide English</li>
+        <li id="hideMemo">Hide Japanese</li>
+        <li id="open">Open</li>
+    </ul>
+</main>
+<table id="list">
+<!-- ここに追加データが挿入される -->
+</table>
+<script>
+// Saveボタンの有効化/無効化チェック関数
+function checkInput() {
+    const key = $("#key").val().trim();
+    const memo = $("#memo").val().trim();
+    if (key && memo) {
+        $("#save").removeClass("disabled");
+    } else {
+        $("#save").addClass("disabled");
+    }
+}
+
+// 入力フィールドの変更時にチェック
+$("#key, #memo").on("input", checkInput);
+
+//1.Save クリックイベント
+$("#save").on("click",function(){
+    if ($(this).hasClass("disabled")) return; // 無効化状態なら何もしない
+    const key = $("#key").val();
+    const value = $("#memo").val();
+    localStorage.setItem(key,value);
+    const html = '<tr><td class="key">'+key+'</td><td class="memo">'+value+'</td><td><button class="edit">Edit</button></td><td><button class="delete">Delete</button></td></tr>';
+    $("#list").append(html);
+    $("#key").val("");
+    $("#memo").val("");
+    checkInput(); // 入力フィールドをリセットし、Saveボタンを再度無効化
+});
+
+
+
+//2.clear クリックイベント
+$("#clear").on("click",function(){
+    localStorage.clear();
+    $("#list").empty();
+});
+
+
+
+
+//3.ページ読み込み：保存データ取得表示
+for(let i=0; i<localStorage.length; i++){  
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const html = '<tr><td>'+key+'</td><td>'+value+'</td><td><button class="edit">Edit</button></td><td><button class="delete">Delete</button></td></tr>';
+    $("#list").append(html);
+}
+
+// 4. データを選択して削除
+$(document).on("click", ".delete", function(){
+    const key = $(this).closest("tr").find("td:first").text();
+    localStorage.removeItem(key);
+    $(this).closest("tr").remove();
+});
+
+// 5. データを編集可能にする
+$(document).on("click", ".edit", function(){
+    const key = $(this).closest("tr").find("td:first").text();
+    const value = localStorage.getItem(key);
+    $("#key").val(key);
+    $("#memo").val(value);
+    checkInput(); // 編集時にSaveボタンを有効化
+    $(this).closest("tr").remove(); // 編集時には元の行を削除
+});
+
+// 6. Hide Key クリックイベント
+$("#hideKey").on("click", function(){
+    $(".key").hide(); // key一覧を隠す
+});
+
+// 7. Hide Memo クリックイベント
+$("#hideMemo").on("click", function(){
+    $(".memo").hide(); // memo一覧を隠す
+});
+
+// 8. Open クリックイベント
+$("#open").on("click", function(){
+    $(".key").show();  // key一覧を表示する
+    $(".memo").show(); // memo一覧を表示する
+});
+
+
+</script>
+<footer><small>G's</small></footer>
+</body>
+</html>
